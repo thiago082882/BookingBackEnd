@@ -6,6 +6,7 @@ import usersRouter from "./routes/users.js";
 import hotelsRouter from "./routes/hotels.js";
 import roomsRouter from "./routes/rooms.js";
 
+
 dotenv.config()
 
 const app = express();
@@ -31,6 +32,7 @@ mongoose.connection.on('Desconnect',()=>{
 
 //middLewares
 
+
 app.use(express.json());
 
 app.use("/api/auth",authRouter);
@@ -39,9 +41,19 @@ app.use("/api/users",usersRouter);
 
 app.use("/api/hotels",hotelsRouter);
 
-
 app.use("/api/rooms",roomsRouter);
 
+app.use((err,req,res,next)=>{
+   const errorStatus = err.status || 500
+   const errorMessage = err.message || "Servidor não disponivél"
+    return res.status(errorStatus).json({
+        message:errorMessage,
+        status:errorStatus,
+        success: false,
+        stack:err.stack
+    
+    })
+    }); 
 app.listen(8800,()=>{
     connect()
     console.log('Conectado  ao backend')

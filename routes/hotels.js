@@ -1,83 +1,21 @@
-import  express  from "express";
-import Hotel from "../models/Hotel.js";
+import express from "express";
+import { createHotel, deleteHotel, getHotel, getHotels, updateHotel } from "../controllers/hotel.js";
 
 const router = express.Router();
 
+// Create 
+router.post("/", createHotel);
 
-//Create 
-router.post("/",async(req,res)=>{
+// Update
+router.put("/:id", updateHotel);
 
-    const newHotel = new Hotel(req.body);
-    try {
+// Delete
+router.delete("/:id", deleteHotel);
 
+// Get a single hotel
+router.get("/:id", getHotel);
 
-        const saveHotel = await newHotel.save();
-        res.status(201).json(saveHotel);
-        
-    } catch (error) {
-        res.status(500).json(error);
-    }
+// Get all hotels
+router.get("/", getHotels);
 
-});
-
-//Update
-router.put("/:id",async(req,res)=>{
-
-    try {
-
-
-        const updateHotel = await Hotel.findByIdAndUpdate(req.params.id,{$set:req.body},{new:true});
-        res.status(200).json(updateHotel);
-        
-    } catch (error) {
-        res.status(500).json(error);
-    }
-
-});
-
-//Delete
-router.delete("/:id",async(req,res)=>{
-
-    try {
-
-
-         await Hotel.findByIdAndDelete(req.params.id);
-        res.status(200).json({"message":"Hotel Eliminado com Sucesso"});
-        
-    } catch (error) {
-        res.status(500).json(error);
-    }
-
-});
-
-//get
-router.get("/:id",async(req,res)=>{
-
-    try {
-
-
-        const hotel =  await Hotel.findById(req.params.id);
-        res.status(200).json(hotel);
-        
-    } catch (error) {
-        res.status(500).json(error);
-    }
-
-});
-
-
-//get All
-router.get("/",async(req,res)=>{
-
-    try {
-
-
-        const hotels =  await Hotel.find();
-        res.status(200).json(hotels);
-        
-    } catch (error) {
-        res.status(500).json(error);
-    }
-
-});
 export default router;
